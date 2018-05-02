@@ -1,0 +1,4 @@
+LOAD R0, 2
+SUB R0, R0, 1
+MUL R0, R0, 2
+ADD R0, R0, 1
