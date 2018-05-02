@@ -4,6 +4,6 @@
 # 
 # NOTE: No need to include .vhdl extension.
 
-ghdl -a $1.vhdl
-ghdl -e $1
+ghdl -a --ieee=synopsys $1.vhdl
+ghdl -e --ieee=synopsys $1
 ./$1
