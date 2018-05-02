@@ -1,0 +1,19 @@
+$date
+  Wed May  2 12:40:49 2018
+$end
+$version
+  GHDL v0
+$end
+$timescale
+  1 fs
+$end
+$var reg 21 ! opcode[20:0] $end
+$var reg 21 " dataout[20:0] $end
+$comment processor_t is not handled $end
+$enddefinitions $end
+#0
+bUUUUUUUUUUUUUUUUUUUUU !
+b000000000000001100010 "
+#20000000
+b001000010000001100001 "
+#40000000

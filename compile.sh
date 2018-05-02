@@ -6,4 +6,4 @@
 
 ghdl -a --ieee=synopsys $1.vhdl
 ghdl -e --ieee=synopsys $1
-./$1
+ghdl -r --ieee=synopsys $1 --vcd=$1.vcd
