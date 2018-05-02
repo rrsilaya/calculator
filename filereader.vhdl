@@ -32,7 +32,7 @@ architecture bev of filereader is
 
         processor_t(i) <= buff;
         for count in 0 to 20 loop
-          report std_logic'image(buff(count));
+          report std_logic'image(buff(20 - count));
         end loop;
         report "\n";
         
@@ -43,3 +43,5 @@ architecture bev of filereader is
       --dataout <= processor_t(opcode);
   end process;
 end bev;
+
+--filereading reference: https://www.edaplayground.com/x/3vh
