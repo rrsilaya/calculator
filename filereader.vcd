@@ -1,5 +1,5 @@
 $date
-  Wed May  2 12:40:49 2018
+  Wed May  9 11:00:28 2018
 $end
 $version
   GHDL v0
@@ -7,13 +7,22 @@ $end
 $timescale
   1 fs
 $end
-$var reg 21 ! opcode[20:0] $end
-$var reg 21 " dataout[20:0] $end
-$comment processor_t is not handled $end
+$var reg 3 ! operator[2:0] $end
+$var reg 6 " operand1[5:0] $end
+$var reg 6 # operand2[5:0] $end
+$var reg 6 $ operand3[5:0] $end
+$comment processor_o is not handled $end
+$comment processor_o1 is not handled $end
+$comment processor_o2 is not handled $end
+$comment processor_o3 is not handled $end
 $enddefinitions $end
 #0
-bUUUUUUUUUUUUUUUUUUUUU !
-b000000000000001100010 "
+b000 !
+b000000 "
+b000001 #
+b100010 $
 #20000000
-b001000010000001100001 "
+b001 !
+b000010 "
+b100001 $
 #40000000
