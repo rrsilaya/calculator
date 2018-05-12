@@ -10,7 +10,7 @@ entity calculator is
   port (
     clock     : out STD_LOGIC;
     stage     : out STD_LOGIC_VECTOR(4 downto 0) := (others => '0');
-    flag      : out STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
+    flag      : out STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
     pc        : out STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
     registers : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
     instruction : out STD_LOGIC_VECTOR(20 downto 0)
@@ -142,7 +142,7 @@ architecture bev of calculator is
         instruction <= std_logic_vector(to_unsigned(0, 21));
         stage <= stalled;
         pc <= std_logic_vector(to_unsigned(0, 4));
-        flag <= std_logic_vector(to_unsigned(0, 3));
+        flag <= std_logic_vector(to_unsigned(0, 4));
 
         wait for 1 ns;
       end loop;
