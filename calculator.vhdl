@@ -8,10 +8,11 @@ use std.textio.all;
 
 entity calculator is
   port (
-    clock : out STD_LOGIC;
-    stage : out STD_LOGIC_VECTOR(5 downto 0) := (others => '0');
-    flag  : out STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
-    pc    : out STD_LOGIC_VECTOR(3 downto 0) := (others => '0')
+    clock     : out STD_LOGIC;
+    stage     : out STD_LOGIC_VECTOR(5 downto 0) := (others => '0');
+    flag      : out STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
+    pc        : out STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
+    registers : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0')
   );
 end entity;
 
@@ -27,8 +28,15 @@ architecture bev of calculator is
       FILE content       : TEXT;
       CONSTANT filename  : STRING := "input/1.txt";
       VARIABLE buff      : LINE;
-      VARIABLE i         : INTEGER := 0;
+      VARIABLE ins       : INTEGER := 0;
       VARIABLE clk       : INTEGER := 0;
+      VARIABLE fetched   : INTEGER;
+
+      CONSTANT FETCH     : INTEGER := 5;
+      CONSTANT DECODE    : INTEGER := 4;
+      CONSTANT EXECUTE   : INTEGER := 3;
+      CONSTANT MEMORY    : INTEGER := 2;
+      CONSTANT WRITEBACK : INTEGER := 1;
 
       VARIABLE opcode    : STD_LOGIC_VECTOR(20 downto 0);
     begin
@@ -39,24 +47,33 @@ architecture bev of calculator is
           readline(content, buff);
           read(buff, opcode);
 
-          instr_cache(i) <= opcode;
+          instr_cache(ins) <= opcode;
 
-          i := i + 1;
+          ins := ins + 1;
         end loop;
 
         file_close(content);
       -- [/ File Reading ]
 
-      for clk in 0 to 20 loop
-        -- Clock
-        if (clk MOD 2) = 0 then clock <= '1';
-        else                  clock <= '0';
-        end if;
+      for clk in 0 to ins - 1 loop
+        clock <= '1';
+        
+        -- Fetch
+        stage(FETCH) <= '1';
+
+        -- Decode
+
 
         -- Program Counter
-        if (clk MOD 2) = 0 then pc <= std_logic_vector(to_unsigned((clk / 2) + 1, 4));
-        else pc <= std_logic_vector(to_unsigned(0, 4));
-        end if;
+        pc <= std_logic_vector(to_unsigned((clk / 2) + 1, 4));
+
+        wait for 20 ns;
+
+        -- Reset Skip
+        clock <= '0';
+        stage <= std_logic_vector(to_unsigned(0, 6));
+        pc <= std_logic_vector(to_unsigned(0, 4));
+        flag <= std_logic_vector(to_unsigned(0, 3));
 
         wait for 20 ns;
       end loop;
