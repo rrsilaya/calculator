@@ -50,6 +50,8 @@ architecture bev of calculator is
       VARIABLE progCt    : INTEGER := 0;
 
       VARIABLE destination : STD_LOGIC_VECTOR(5 downto 0);
+      VARIABLE operand1    : STD_LOGIC_VECTOR(5 downto 0);
+      VARIABLE operand2    : STD_LOGIC_VECTOR(5 downto 0);
 
       CONSTANT FETCH     : INTEGER := 4;
       CONSTANT DECODE    : INTEGER := 3;
@@ -74,15 +76,25 @@ architecture bev of calculator is
         file_close(content);
       -- [/ File Reading ]
 
-      while writer /= ins loop
+      for clk in 0 to 20 loop--while writer /= ins loop
         clock <= '1';
 
         -- Write Back
         if memorized(writer) = '1' then
+          if to_integer(unsigned(instr_cache(decoder)(20 downto 12))) = 1 then
+            destination := instr_cache(decoder)(11 downto 6);
+          else
+            destination := instr_cache(decoder)(17 downto 12);
+          end if;
+
           stage(WRITEBACK) <= '1';
 
           writed(writer) := '1';
           writer := writer + 1;
+
+          -- Release lock
+          write_reg(to_integer(unsigned(destination - 1))) := '0';
+          --report integer'image(to_integer(unsigned(destination - 1)));
         end if;
 
         -- Memory
@@ -104,23 +116,32 @@ architecture bev of calculator is
         -- Decode
         if fetched(decoder) = '1' then
           -- Check if instruction is LOAD
-          if to_integer(unsigned(instr_cache(decoder)(8 downto 0))) = 1 then
-            destination := instr_cache(decoder)(14 downto 9);
+          if to_integer(unsigned(instr_cache(decoder)(20 downto 12))) = 1 then
+            destination := instr_cache(decoder)(11 downto 6);
           else
-            destination := instr_cache(decoder)(8 downto 3);
+            destination := instr_cache(decoder)(17 downto 12);
+            operand1 :=  instr_cache(decoder)(11 downto 6);
+            operand2 :=  instr_cache(decoder)(5 downto 0);
           end if;
 
           stage(DECODE) <= '1';
-          --if write_reg(to_integer(unsigned(destination))) = '1' then
-          --  -- We stall decode stage
-          --  stalled(DECODE) := '1';
-          --else
+
+          if to_integer(unsigned(instr_cache(decoder)(8 downto 0))) = 1 then
+            if write_reg(to_integer(unsigned(destination))) = '1' then
+              stalled(DECODE) := '1';
+            end if;
+          elsif (write_reg(to_integer(unsigned(destination))) = '1' or write_reg(to_integer(unsigned(operand1))) = '1')
+          then
+            -- We stall decode stage
+            stalled(DECODE) := '1';
+          else
             decoded(decoder) := '1';
             decoder := decoder + 1;
+            stalled(DECODE) := '0';
 
             -- Lock down write access to register
             write_reg(to_integer(unsigned(destination))) := '1';
-          --end if;
+          end if;
         end if;
 
         -- Fetch
@@ -134,6 +155,7 @@ architecture bev of calculator is
         -- Program Counter
         progCt := progCt + 1;
         pc <= std_logic_vector(to_unsigned(progCt, 4));
+        registers <= write_reg;
 
         wait for 1 ns;
 
