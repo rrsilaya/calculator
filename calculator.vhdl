@@ -90,7 +90,7 @@ architecture bev of calculator is
         progCt := progCt + 1;
         pc <= std_logic_vector(to_unsigned(progCt, 4));
 
-        wait for 20 ns;
+        wait for 1 ns;
 
         -- Reset Skip
         clock <= '0';
@@ -99,7 +99,7 @@ architecture bev of calculator is
         pc <= std_logic_vector(to_unsigned(0, 4));
         flag <= std_logic_vector(to_unsigned(0, 3));
 
-        wait for 20 ns;
+        wait for 1 ns;
       end loop;
       wait;
   end process;
