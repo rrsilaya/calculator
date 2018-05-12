@@ -72,7 +72,6 @@ architecture bev of calculator is
         end loop;
 
         file_close(content);
-        
       -- [/ File Reading ]
 
       while writer /= ins loop
@@ -125,12 +124,8 @@ architecture bev of calculator is
         end if;
 
         -- Fetch
-        if to_integer(unsigned(instr_cache(progCt)(2 downto 0))) /= 0 then
-          if to_integer(unsigned(instr_cache(progCt)(8 downto 3))) /= 0 then
-            stage(FETCH) <= '1';
-            fetched(progCt) := '1';
-          end if;
-        end if;
+        stage(FETCH) <= '1';
+        fetched(progCt) := '1';
 
         -- Program Counter
         instruction <= instr_cache(progCt);
