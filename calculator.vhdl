@@ -9,7 +9,7 @@ use std.textio.all;
 entity calculator is
   port (
     clock     : out STD_LOGIC;
-    stage     : out STD_LOGIC_VECTOR(5 downto 0) := (others => '0');
+    stage     : out STD_LOGIC_VECTOR(4 downto 0) := (others => '0');
     flag      : out STD_LOGIC_VECTOR(2 downto 0) := (others => '0');
     pc        : out STD_LOGIC_VECTOR(3 downto 0) := (others => '0');
     registers : out STD_LOGIC_VECTOR(31 downto 0) := (others => '0');
@@ -40,11 +40,11 @@ architecture bev of calculator is
       VARIABLE decoder   : INTEGER := 0;
       VARIABLE progCt    : INTEGER := 0;
 
-      CONSTANT FETCH     : INTEGER := 5;
-      CONSTANT DECODE    : INTEGER := 4;
-      CONSTANT EXECUTE   : INTEGER := 3;
-      CONSTANT MEMORY    : INTEGER := 2;
-      CONSTANT WRITEBACK : INTEGER := 1;
+      CONSTANT FETCH     : INTEGER := 4;
+      CONSTANT DECODE    : INTEGER := 3;
+      CONSTANT EXECUTE   : INTEGER := 2;
+      CONSTANT MEMORY    : INTEGER := 1;
+      CONSTANT WRITEBACK : INTEGER := 0;
 
       VARIABLE opcode    : STD_LOGIC_VECTOR(20 downto 0);
     begin
@@ -95,7 +95,7 @@ architecture bev of calculator is
         -- Reset Skip
         clock <= '0';
         instruction <= std_logic_vector(to_unsigned(0, 21));
-        stage <= std_logic_vector(to_unsigned(0, 6));
+        stage <= std_logic_vector(to_unsigned(0, 5));
         pc <= std_logic_vector(to_unsigned(0, 4));
         flag <= std_logic_vector(to_unsigned(0, 3));
 
