@@ -124,11 +124,14 @@ architecture bev of calculator is
         end if;
 
         -- Fetch
-        stage(FETCH) <= '1';
-        fetched(progCt) := '1';
+        if progCt < ins then
+          stage(FETCH) <= '1';
+          fetched(progCt) := '1';
+
+          instruction <= instr_cache(progCt);
+        end if;
 
         -- Program Counter
-        instruction <= instr_cache(progCt);
         progCt := progCt + 1;
         pc <= std_logic_vector(to_unsigned(progCt, 4));
 
