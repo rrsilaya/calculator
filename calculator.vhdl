@@ -110,6 +110,7 @@ architecture bev of calculator is
           stage(EXECUTE) <= '1';
 
           executed(executor) := '1';
+          flag(0) <= '1';
           executor := executor + 1;
         end if;
 
@@ -167,6 +168,7 @@ architecture bev of calculator is
         flag <= std_logic_vector(to_unsigned(0, 4));
 
         wait for 1 ns;
+        flag(0) <= '0';
       end loop;
       wait;
   end process;
